@@ -4,14 +4,28 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tiny Tots Kinder Home | Wisdom with Wonder</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+
     <link
       href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/lenis@1.1.13/dist/lenis.css"
+    />
+
     <style>
       body {
         font-family: "Quicksand", sans-serif;
+        overflow-x: hidden;
+      }
+      html {
+        scroll-behavior: initial !important;
       }
       .pink-light {
         background-color: #fdf2f8;
@@ -22,20 +36,35 @@
       .blob {
         border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
       }
-      .premium-shadow {
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+      .gsap-reveal {
+        opacity: 0;
+        transform: translateY(30px);
       }
-      html {
-        scroll-behavior: initial;
+      #mobile-menu {
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateY(-100%);
       }
-      .google-font {
-        font-family: "Roboto", sans-serif;
+      #mobile-menu.active {
+        transform: translateY(0);
+      }
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #fdf2f8;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #f472b6;
+        border-radius: 10px;
+      }
+      .social-card:hover .social-icon {
+        transform: scale(1.1) rotate(5deg);
       }
     </style>
   </head>
-  <body class="overflow-x-hidden pink-light text-slate-700">
+  <body class="pink-light text-slate-700">
     <nav
-      class="fixed top-0 w-full z-50 px-8 py-4 flex justify-between items-center bg-white/70 backdrop-blur-md border-b border-pink-100"
+      class="fixed top-0 w-full z-50 px-4 md:px-8 py-4 flex justify-between items-center bg-white/80 backdrop-blur-md border-b border-pink-100"
     >
       <div class="flex items-center gap-2">
         <div
@@ -46,21 +75,64 @@
         <span class="text-xl font-bold text-pink-500">Tiny Tots</span>
       </div>
       <div class="hidden md:flex gap-8 font-semibold text-blue-600">
-        <a href="#" class="hover:text-pink-500 transition-colors">Home</a>
-        <a href="#services" class="hover:text-pink-500 transition-colors"
+        <a href="#" class="nav-link hover:text-pink-500 transition-colors"
+          >Home</a
+        >
+        <a
+          href="#services"
+          class="nav-link hover:text-pink-500 transition-colors"
           >Services</a
         >
-        <a href="#about" class="hover:text-pink-500 transition-colors">About</a>
-        <a href="#testimonials" class="hover:text-pink-500 transition-colors"
-          >Reviews</a
+        <a
+          href="#strategy"
+          class="nav-link hover:text-pink-500 transition-colors"
+          >Mission</a
+        >
+        <a
+          href="#contact"
+          class="nav-link hover:text-pink-500 transition-colors"
+          >Contact</a
         >
       </div>
-      <button
-        class="bg-pink-500 text-white px-6 py-2 rounded-full font-bold shadow-lg hover:bg-pink-600 transform hover:scale-105 transition"
-      >
-        Enroll Now
-      </button>
+      <div class="flex items-center gap-4">
+        <button
+          class="bg-pink-500 text-white px-6 py-2 rounded-full font-bold shadow-lg hover:bg-pink-600 transition text-sm md:text-base"
+        >
+          Enroll Now
+        </button>
+        <button
+          id="menu-toggle"
+          class="md:hidden text-blue-600 focus:outline-none"
+        >
+          <svg
+            class="w-8 h-8"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M4 6h16M4 12h16m-7 6h7"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+      </div>
     </nav>
+
+    <div
+      id="mobile-menu"
+      class="fixed top-0 left-0 w-full h-fit bg-white z-40 p-8 pt-24 shadow-xl md:hidden"
+    >
+      <div
+        class="flex flex-col gap-6 text-center text-xl font-bold text-blue-600"
+      >
+        <a href="#" class="mobile-nav-link">Home</a>
+        <a href="#services" class="mobile-nav-link">Services</a>
+        <a href="#strategy" class="mobile-nav-link">Mission</a>
+        <a href="#contact" class="mobile-nav-link">Contact</a>
+      </div>
+    </div>
 
     <section
       class="min-h-screen flex flex-col items-center justify-center relative px-6 pt-20"
@@ -68,397 +140,457 @@
       <div
         class="absolute top-20 left-10 w-20 h-20 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"
       ></div>
-      <div
-        class="absolute bottom-20 right-10 w-32 h-32 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-70"
-      ></div>
-      <div class="text-center z-10 hero-content">
+      <div class="text-center z-10 hero-content gsap-reveal">
         <span
-          class="bg-white px-4 py-1 rounded-full text-blue-500 font-bold text-sm shadow-sm mb-4 inline-block"
-          >ESTD. 2074</span
+          class="bg-white px-4 py-1 rounded-full text-blue-500 font-bold text-sm shadow-sm mb-4 inline-block uppercase tracking-widest"
+          >Est. 2074</span
         >
         <h1
-          class="text-5xl md:text-7xl font-bold text-slate-800 mb-6 leading-tight"
+          class="text-4xl md:text-7xl font-bold text-slate-800 mb-6 leading-tight"
         >
-          Where <span class="text-pink-500">Wisdom</span> meets <br /><span
+          Where <span class="text-pink-500">Wisdom</span> meets<br /><span
             class="text-blue-500"
             >Wonder</span
           >.
         </h1>
-        <p class="max-w-xl mx-auto text-lg text-slate-500 mb-8">
+        <p
+          class="max-w-xl mx-auto text-base md:text-lg text-slate-500 mb-8 px-4"
+        >
           Located in Birtamode-4, Jhapa, we provide a nurturing environment for
           your little ones to grow, play, and learn.
         </p>
-        <div class="flex flex-wrap justify-center gap-4">
-          <a
-            href="#services"
-            class="bg-blue-500 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-xl hover:bg-blue-600 transition"
-            >Our Services</a
-          >
-        </div>
+        <a
+          href="#contact"
+          class="nav-link bg-blue-500 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-xl hover:bg-blue-600 transition inline-block"
+          >Join Our Family</a
+        >
       </div>
     </section>
 
     <section
       id="services"
-      class="py-24 blue-light rounded-t-[100px] -mt-20 relative z-20"
+      class="py-24 blue-light rounded-t-[50px] md:rounded-t-[100px] -mt-20 relative z-20"
     >
       <div class="max-w-6xl mx-auto px-6">
-        <div class="text-center mb-16 services-header">
-          <h2 class="text-4xl font-bold mb-4">Our Premium Services</h2>
-          <p class="text-slate-500 max-w-lg mx-auto">
-            Everything your child needs for a balanced, healthy, and creative
-            growth journey.
-          </p>
-          <div class="w-24 h-1 bg-pink-400 mx-auto mt-4 rounded-full"></div>
+        <div class="text-center mb-16 gsap-reveal">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">
+            Our Premium Services
+          </h2>
+          <div class="w-24 h-1 bg-pink-400 mx-auto rounded-full"></div>
         </div>
-
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div
-            class="bg-white p-6 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-blue-50 service-card"
+            class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-blue-50 service-card gsap-reveal"
           >
             <div class="text-4xl mb-4">🚌</div>
             <h3 class="font-bold text-blue-600 text-lg mb-2">Transportation</h3>
             <p class="text-sm text-slate-500">
-              Safe and reliable pickup/drop-off across Birtamode.
+              Safe and reliable pickup across Birtamode.
             </p>
           </div>
           <div
-            class="bg-white p-6 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-pink-50 service-card"
+            class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-pink-50 service-card gsap-reveal"
           >
             <div class="text-4xl mb-4">🍲</div>
-            <h3 class="font-bold text-pink-500 text-lg mb-2">
-              Healthy Fooding
-            </h3>
+            <h3 class="font-bold text-pink-500 text-lg mb-2">Healthy Food</h3>
             <p class="text-sm text-slate-500">
-              Nutritious, warm meals prepared with hygiene and love.
+              Nutritious, child-friendly meals every day.
             </p>
           </div>
           <div
-            class="bg-white p-6 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-yellow-50 service-card"
+            class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-yellow-50 service-card gsap-reveal"
           >
             <div class="text-4xl mb-4">🎨</div>
             <h3 class="font-bold text-yellow-600 text-lg mb-2">Art & Crafts</h3>
             <p class="text-sm text-slate-500">
-              Exploring creativity through colors, clay, and paper.
+              Exploring imagination through colors and creation.
             </p>
           </div>
           <div
-            class="bg-white p-6 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-purple-50 service-card"
+            class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-purple-50 service-card gsap-reveal"
           >
             <div class="text-4xl mb-4">💃</div>
             <h3 class="font-bold text-purple-600 text-lg mb-2">
-              Dance & Music
+              Music & Dance
             </h3>
             <p class="text-sm text-slate-500">
-              Rhythm and movement classes to build confidence.
+              Rhythmic fun and physical expression for all kids.
             </p>
           </div>
           <div
-            class="bg-white p-6 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-green-50 service-card"
+            class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-green-50 service-card gsap-reveal"
           >
             <div class="text-4xl mb-4">🧘</div>
-            <h3 class="font-bold text-green-600 text-lg mb-2">Kids Yoga</h3>
+            <h3 class="font-bold text-green-600 text-lg mb-2">Yoga Sessions</h3>
             <p class="text-sm text-slate-500">
-              Developing focus and flexibility from a young age.
+              Mindfulness and flexibility from an early age.
             </p>
           </div>
           <div
-            class="bg-white p-6 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-red-50 service-card"
+            class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-red-50 service-card gsap-reveal"
           >
             <div class="text-4xl mb-4">🥋</div>
-            <h3 class="font-bold text-red-600 text-lg mb-2">Karate</h3>
+            <h3 class="font-bold text-red-600 text-lg mb-2">Karate Classes</h3>
             <p class="text-sm text-slate-500">
-              Basic self-defense and discipline for older kids.
+              Building discipline and basic self-defense skills.
             </p>
           </div>
           <div
-            class="bg-white p-6 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-orange-50 service-card"
+            class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-orange-50 service-card gsap-reveal"
           >
             <div class="text-4xl mb-4">⚽</div>
-            <h3 class="font-bold text-orange-600 text-lg mb-2">Sports</h3>
+            <h3 class="font-bold text-orange-600 text-lg mb-2">
+              Sports & Games
+            </h3>
             <p class="text-sm text-slate-500">
-              Fun outdoor activities and physical training.
+              Fun outdoor activities to boost physical growth.
             </p>
           </div>
           <div
-            class="bg-white p-6 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-blue-50 service-card"
+            class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-indigo-50 service-card gsap-reveal"
           >
             <div class="text-4xl mb-4">📚</div>
-            <h3 class="font-bold text-blue-600 text-lg mb-2">Smart Classes</h3>
+            <h3 class="font-bold text-indigo-600 text-lg mb-2">
+              Audio Visuals
+            </h3>
             <p class="text-sm text-slate-500">
-              Interactive audio-visual learning for the modern era.
+              Interactive learning using modern smart classes.
             </p>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="about" class="py-24 pink-light relative overflow-hidden">
-      <div
-        class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center"
-      >
-        <div class="relative about-image">
-          <div
-            class="blob w-full aspect-square bg-blue-400 overflow-hidden shadow-2xl border-8 border-white"
-          >
-            <img
-              src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80"
-              alt="Happy Children"
-              class="w-full h-full object-cover"
-            />
-          </div>
-          <div
-            class="absolute -bottom-6 -right-6 bg-yellow-400 p-6 rounded-3xl shadow-xl transform rotate-12 about-badge"
-          >
-            <p class="text-white font-bold text-center leading-tight">
-              <span class="text-3xl">7+</span><br />Years of<br />Excellence
-            </p>
-          </div>
-        </div>
-        <div class="about-content">
-          <span
-            class="text-blue-500 font-bold tracking-widest uppercase text-sm mb-4 block"
-            >Our Story</span
-          >
-          <h2
-            class="text-4xl md:text-5xl font-bold text-slate-800 mb-6 leading-tight"
-          >
-            Nurturing Bright Minds <br />in
-            <span class="text-pink-500">Birtamode</span>
-          </h2>
-          <p class="text-lg text-slate-600 mb-8 leading-relaxed">
-            Established in 2074, we provide a home-away-from-home where children
-            feel safe to explore their curiosity and gain wisdom with wonder.
-          </p>
-          <ul class="space-y-4 mb-10">
-            <li class="flex items-center gap-3 font-semibold text-slate-700">
-              <span
-                class="w-6 h-6 bg-pink-100 text-pink-500 rounded-full flex items-center justify-center text-xs"
-                >✓</span
-              >Certified & Loving Educators
-            </li>
-            <li class="flex items-center gap-3 font-semibold text-slate-700">
-              <span
-                class="w-6 h-6 bg-pink-100 text-pink-500 rounded-full flex items-center justify-center text-xs"
-                >✓</span
-              >Safe & Hygienic Play Area
-            </li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section id="testimonials" class="py-24 blue-light overflow-hidden">
+    <section id="strategy" class="py-24 bg-white">
       <div class="max-w-6xl mx-auto px-6">
-        <div
-          class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 testimonial-header"
-        >
-          <div>
-            <div class="flex items-center gap-2 mb-2">
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_Reference_icon.svg"
-                class="w-6"
-                alt="Google"
-              />
-              <span
-                class="font-bold text-slate-500 uppercase tracking-widest text-sm"
-                >Google Reviews</span
-              >
-            </div>
-            <h2 class="text-4xl font-bold">What Parents are Saying</h2>
-          </div>
-          <div
-            class="bg-white p-4 rounded-2xl shadow-sm flex items-center gap-4 border border-slate-100"
-          >
-            <div class="text-center">
-              <div class="text-2xl font-bold text-slate-800">4.9</div>
-              <div class="flex text-yellow-400 text-sm">★★★★★</div>
-            </div>
-            <div class="h-10 w-[1px] bg-slate-200"></div>
-            <div class="text-sm text-slate-500 font-medium text-center">
-              Based on <br />50+ Reviews
-            </div>
-          </div>
-        </div>
-
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div
-            class="bg-white p-8 rounded-[32px] shadow-sm hover:shadow-xl transition-all border border-slate-50 testimonial-card"
+            class="p-8 rounded-[2rem] bg-pink-50 border border-pink-100 gsap-reveal"
           >
-            <div class="flex items-center gap-4 mb-4">
-              <div
-                class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600"
-              >
-                A
-              </div>
-              <div>
-                <h4 class="font-bold text-slate-800">Anjali Sharma</h4>
-                <div class="flex text-yellow-400 text-xs">★★★★★</div>
-              </div>
-            </div>
-            <p class="text-slate-600 italic leading-relaxed">
-              "Best nursery in Birtamode. My son loves the food and the dance
-              classes. The teachers are very caring!"
+            <h3 class="text-2xl font-bold text-pink-600 mb-4">Our Vision</h3>
+            <p class="text-slate-600 leading-relaxed">
+              To be the most trusted cradle of early education where every
+              child's potential is unlocked through joy and discovery.
             </p>
-            <div class="mt-4 text-xs text-slate-400">2 months ago</div>
           </div>
           <div
-            class="bg-white p-8 rounded-[32px] shadow-sm hover:shadow-xl transition-all border border-slate-50 testimonial-card"
+            class="p-8 rounded-[2rem] bg-blue-50 border border-blue-100 gsap-reveal"
           >
-            <div class="flex items-center gap-4 mb-4">
-              <div
-                class="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center font-bold text-pink-600"
-              >
-                R
-              </div>
-              <div>
-                <h4 class="font-bold text-slate-800">Rajesh Thapa</h4>
-                <div class="flex text-yellow-400 text-xs">★★★★★</div>
-              </div>
-            </div>
-            <p class="text-slate-600 italic leading-relaxed">
-              "Very safe environment with CCTV. I feel secure leaving my
-              daughter here. The van service is also very punctual."
+            <h3 class="text-2xl font-bold text-blue-600 mb-4">Our Mission</h3>
+            <p class="text-slate-600 leading-relaxed">
+              Providing a safe, inclusive, and stimulating environment that
+              fosters emotional, social, and cognitive growth for bright
+              futures.
             </p>
-            <div class="mt-4 text-xs text-slate-400">1 month ago</div>
           </div>
           <div
-            class="bg-white p-8 rounded-[32px] shadow-sm hover:shadow-xl transition-all border border-slate-50 testimonial-card"
+            class="p-8 rounded-[2rem] bg-yellow-50 border border-yellow-100 gsap-reveal"
           >
-            <div class="flex items-center gap-4 mb-4">
-              <div
-                class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center font-bold text-yellow-600"
-              >
-                S
-              </div>
-              <div>
-                <h4 class="font-bold text-slate-800">Sita Dahal</h4>
-                <div class="flex text-yellow-400 text-xs">★★★★★</div>
-              </div>
-            </div>
-            <p class="text-slate-600 italic leading-relaxed">
-              "Mrs. Suman Rai's vision is truly reflected in the care provided.
-              Highly recommend Tiny Tots to all parents."
-            </p>
-            <div class="mt-4 text-xs text-slate-400">3 weeks ago</div>
+            <h3 class="text-2xl font-bold text-yellow-700 mb-4">Core Values</h3>
+            <ul class="text-slate-600 space-y-2 font-semibold">
+              <li>✨ Child-Centric Care</li>
+              <li>🤝 Integrity & Safety</li>
+              <li>🌱 Lifelong Curiosity</li>
+              <li>❤️ Compassionate Learning</li>
+            </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="founder" class="py-24 pink-light relative overflow-hidden">
+    <section id="founder" class="py-24 pink-light">
       <div class="max-w-5xl mx-auto px-6">
         <div
-          class="bg-white/50 backdrop-blur-sm rounded-[60px] p-8 md:p-16 border-2 border-white shadow-2xl relative founder-container"
+          class="bg-white/70 backdrop-blur-md rounded-[40px] md:rounded-[60px] p-8 md:p-16 border-2 border-white shadow-2xl flex flex-col md:flex-row items-center gap-12 gsap-reveal"
         >
-          <div
-            class="absolute -top-10 left-10 text-8xl text-pink-200 select-none"
-          >
-            “
+          <div class="w-48 h-48 md:w-80 md:h-80 flex-shrink-0 relative">
+            <div
+              class="absolute inset-0 bg-pink-400 rotate-6 rounded-[40px]"
+            ></div>
+            <img
+              src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80"
+              alt="Mrs. Suman Rai"
+              class="absolute inset-0 w-full h-full object-cover rounded-[40px] border-4 border-white shadow-lg"
+            />
           </div>
-          <div
-            class="flex flex-col md:flex-row items-center gap-12 relative z-10"
-          >
-            <div class="w-64 h-64 md:w-80 md:h-80 flex-shrink-0 relative">
-              <div
-                class="absolute inset-0 bg-pink-400 rotate-6 rounded-[60px]"
-              ></div>
-              <div
-                class="absolute inset-0 bg-yellow-400 -rotate-3 rounded-[60px]"
-              ></div>
-              <div
-                class="absolute inset-0 bg-slate-200 rounded-[60px] overflow-hidden border-4 border-white"
-              >
-                <img
-                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80"
-                  alt="Mrs. Suman Rai"
-                  class="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-            <div class="text-left">
-              <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-2">
-                Message from the Founder
-              </h2>
-              <h3 class="text-xl font-bold text-pink-500 mb-6 tracking-wide">
-                Mrs. Suman Rai
-              </h3>
-              <p class="text-lg text-slate-600 italic leading-relaxed mb-6">
-                "At Tiny Tots, we ignite the spark of curiosity in every child.
-                Our commitment is to provide a space where wisdom is gained
-                through wonder."
-              </p>
-              <div class="flex items-center gap-4">
-                <div class="w-12 h-0.5 bg-blue-400"></div>
-                <span
-                  class="font-bold uppercase tracking-widest text-sm text-blue-500"
-                  >With Love & Care</span
-                >
-              </div>
-            </div>
+          <div class="text-center md:text-left">
+            <span
+              class="text-pink-500 font-bold tracking-widest uppercase text-sm mb-4 block"
+              >Leadership</span
+            >
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-2">
+              Message from the Founder
+            </h2>
+            <h3 class="text-xl font-bold text-blue-500 mb-6 italic">
+              Mrs. Suman Rai
+            </h3>
+            <p class="text-lg text-slate-600 italic leading-relaxed">
+              "At Tiny Tots, we ignite the spark of curiosity in every child. We
+              don't just teach; we inspire. Every child here is treated as our
+              own, ensuring they gain wisdom through the magic of wonder."
+            </p>
           </div>
         </div>
       </div>
     </section>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <section id="testimonials" class="py-24 blue-light">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="text-center mb-16 gsap-reveal">
+          <h2 class="text-3xl md:text-4xl font-bold">What Parents Say</h2>
+          <div class="flex justify-center mt-4 text-yellow-400">
+            ★★★★★ (4.9/5 Rating)
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div
+            class="bg-white p-8 rounded-[32px] shadow-sm gsap-reveal border-b-4 border-pink-400"
+          >
+            <h4 class="font-bold text-slate-800 text-lg">Anjali Sharma</h4>
+            <p class="text-slate-500 italic mt-4">
+              "Best nursery in Birtamode. My son loves the food and the dance
+              classes!"
+            </p>
+          </div>
+          <div
+            class="bg-white p-8 rounded-[32px] shadow-sm gsap-reveal border-b-4 border-blue-400"
+          >
+            <h4 class="font-bold text-slate-800 text-lg">Rajesh Thapa</h4>
+            <p class="text-slate-500 italic mt-4">
+              "Very safe environment with CCTV. The van service is also very
+              punctual."
+            </p>
+          </div>
+          <div
+            class="bg-white p-8 rounded-[32px] shadow-sm gsap-reveal border-b-4 border-yellow-400"
+          >
+            <h4 class="font-bold text-slate-800 text-lg">Sita Dahal</h4>
+            <p class="text-slate-500 italic mt-4">
+              "Mrs. Suman Rai's vision is truly reflected in the care provided.
+              Highly recommend!"
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-20 bg-white">
+      <div class="max-w-6xl mx-auto px-6 text-center">
+        <h2
+          class="text-3xl md:text-4xl font-bold text-slate-800 mb-12 gsap-reveal"
+        >
+          Stay Connected
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <a
+            href="#"
+            class="social-card gsap-reveal bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] p-8 rounded-[2rem] text-white shadow-lg transition-all flex flex-col items-center"
+          >
+            <svg
+              class="w-12 h-12 mb-4 social-icon transition-transform fill-current"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+              />
+            </svg>
+            <h3 class="font-bold text-xl">Instagram</h3>
+          </a>
+          <a
+            href="#"
+            class="social-card gsap-reveal bg-[#1877F2] p-8 rounded-[2rem] text-white shadow-lg transition-all flex flex-col items-center"
+          >
+            <svg
+              class="w-12 h-12 mb-4 social-icon transition-transform fill-current"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+              />
+            </svg>
+            <h3 class="font-bold text-xl">Facebook</h3>
+          </a>
+          <a
+            href="#"
+            class="social-card gsap-reveal bg-black p-8 rounded-[2rem] text-white shadow-lg transition-all flex flex-col items-center"
+          >
+            <svg
+              class="w-12 h-12 mb-4 social-icon transition-transform fill-current"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-2.15.03-4.3.07-6.45V0l.02.02z"
+              />
+            </svg>
+            <h3 class="font-bold text-xl">TikTok</h3>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="py-24 blue-light">
+      <div class="max-w-6xl mx-auto px-6">
+        <div
+          class="grid grid-cols-1 lg:grid-cols-2 gap-12 bg-white rounded-[3rem] overflow-hidden shadow-2xl border border-blue-50"
+        >
+          <div class="p-8 md:p-12 gsap-reveal">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6">Get in Touch</h2>
+            <form class="space-y-4">
+              <input
+                type="text"
+                placeholder="Your Name"
+                class="w-full px-6 py-4 rounded-2xl bg-slate-50 border-none outline-none focus:ring-2 focus:ring-pink-300 transition"
+              />
+              <input
+                type="email"
+                placeholder="Email Address"
+                class="w-full px-6 py-4 rounded-2xl bg-slate-50 border-none outline-none focus:ring-2 focus:ring-pink-300 transition"
+              />
+              <textarea
+                placeholder="Your Message"
+                rows="4"
+                class="w-full px-6 py-4 rounded-2xl bg-slate-50 border-none outline-none focus:ring-2 focus:ring-pink-300 transition"
+              ></textarea>
+              <button
+                class="w-full bg-blue-500 text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-blue-600 transition-all transform hover:scale-[1.02]"
+              >
+                Send Message
+              </button>
+            </form>
+          </div>
+          <div
+            class="h-[400px] lg:h-auto min-h-[400px] bg-slate-200 relative gsap-reveal"
+          >
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14256.402263432!2d87.9818!3d26.63!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39e5ba557004f76d%3A0xc3924c585c531d!2sBirtamode%2C%20Nepal!5e0!3m2!1sen!2snp!4v1700000000000"
+              class="absolute inset-0 w-full h-full border-0 grayscale"
+              allowfullscreen=""
+              loading="lazy"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="bg-slate-900 text-white pt-20 pb-10">
+      <div class="max-w-6xl mx-auto px-6 text-center lg:text-left">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16"
+        >
+          <div class="gsap-reveal">
+            <div
+              class="flex items-center justify-center lg:justify-start gap-2 mb-6"
+            >
+              <div
+                class="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center font-bold text-slate-900"
+              >
+                TT
+              </div>
+              <span class="text-xl font-bold text-pink-400">Tiny Tots</span>
+            </div>
+            <p class="text-slate-400 leading-relaxed">
+              Foundation of wisdom through play. Join the family in Birtamode-4.
+            </p>
+          </div>
+          <div class="gsap-reveal">
+            <h4 class="text-lg font-bold mb-6">Explore</h4>
+            <ul class="space-y-4 text-slate-400">
+              <li>
+                <a href="#" class="hover:text-pink-400 transition"
+                  >Admission Info</a
+                >
+              </li>
+              <li>
+                <a href="#services" class="hover:text-pink-400 transition"
+                  >Our Programs</a
+                >
+              </li>
+              <li>
+                <a href="#founder" class="hover:text-pink-400 transition"
+                  >About Founder</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="gsap-reveal">
+            <h4 class="text-lg font-bold mb-6">Contact Info</h4>
+            <p class="text-slate-400 mb-2">📍 Birtamode-4, Jhapa, Nepal</p>
+            <p class="text-slate-400">📞 +977-23-XXXXXXX</p>
+          </div>
+          <div class="gsap-reveal">
+            <h4 class="text-lg font-bold mb-6">Updates</h4>
+            <div class="flex gap-2">
+              <input
+                type="text"
+                placeholder="Email"
+                class="bg-slate-800 border-none rounded-xl py-3 px-4 w-full text-sm outline-none focus:ring-1 focus:ring-pink-500"
+              />
+              <button class="bg-pink-500 px-4 rounded-xl">Go</button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="pt-8 border-t border-slate-800 text-center text-sm text-slate-500"
+        >
+          © 2026 Tiny Tots Kinder Home. All rights reserved.
+        </div>
+      </div>
+    </footer>
 
     <script>
-      const lenis = new Lenis();
-      function raf(time) {
-        lenis.raf(time);
-        requestAnimationFrame(raf);
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+      });
+      lenis.on("scroll", ScrollTrigger.update);
+      gsap.ticker.add((time) => {
+        lenis.raf(time * 1000);
+      });
+      gsap.ticker.lagSmoothing(0);
+
+      document
+        .querySelectorAll(".nav-link, .mobile-nav-link")
+        .forEach((link) => {
+          link.addEventListener("click", (e) => {
+            const targetId = link.getAttribute("href");
+            if (targetId?.startsWith("#")) {
+              e.preventDefault();
+              const target = document.querySelector(targetId);
+              if (target) {
+                lenis.scrollTo(target, { offset: -80 });
+                if (mobileMenu.classList.contains("active")) toggleMenu();
+              }
+            }
+          });
+        });
+
+      const menuToggle = document.getElementById("menu-toggle");
+      const mobileMenu = document.getElementById("mobile-menu");
+      function toggleMenu() {
+        const isActive = mobileMenu.classList.toggle("active");
+        isActive ? lenis.stop() : lenis.start();
       }
-      requestAnimationFrame(raf);
+      menuToggle.addEventListener("click", toggleMenu);
 
-      gsap.registerPlugin(ScrollTrigger);
-
-      // Hero
-      gsap.from(".hero-content", {
-        y: 50,
-        opacity: 0,
-        duration: 1.5,
-        ease: "power4.out",
-      });
-
-      // Services Stagger
-      gsap.from(".service-card", {
-        scrollTrigger: { trigger: ".services-header", start: "top 80%" },
-        scale: 0.8,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "back.out(1.7)",
-      });
-
-      // Testimonials Stagger
-      gsap.from(".testimonial-card", {
-        scrollTrigger: { trigger: ".testimonial-header", start: "top 80%" },
-        y: 40,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.2,
-        ease: "power3.out",
-      });
-
-      // Founder Section
-      gsap.from(".founder-container", {
-        scrollTrigger: { trigger: "#founder", start: "top 70%" },
-        scale: 0.9,
-        opacity: 0,
-        duration: 1.5,
-        ease: "power2.out",
-      });
-
-      // Floating logo
-      gsap.to(".bg-yellow-400", {
-        y: -10,
-        repeat: -1,
-        yoyo: true,
-        duration: 2,
-        ease: "sine.inOut",
+      window.addEventListener("load", () => {
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.to(".hero-content", { opacity: 1, y: 0, duration: 1.2 });
+        document.querySelectorAll(".gsap-reveal").forEach((el) => {
+          gsap.to(el, {
+            scrollTrigger: { trigger: el, start: "top 90%" },
+            opacity: 1,
+            y: 0,
+            duration: 1,
+          });
+        });
+        gsap.to(".service-card", {
+          scrollTrigger: { trigger: "#services", start: "top 75%" },
+          opacity: 1,
+          y: 0,
+          stagger: 0.1,
+          duration: 0.8,
+        });
       });
     </script>
   </body>
